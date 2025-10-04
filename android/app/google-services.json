@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "708647142889",
+    "project_id": "aparsclassroom-app",
+    "storage_bucket": "aparsclassroom-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708647142889:android:8e3622994810a76c54b778",
+        "android_client_info": {
+          "package_name": "com.apars.shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708647142889-homamlriiag3udvrq0tm71jfqn3k3g32.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apars.shop",
+            "certificate_hash": "06d2c05747210aea7195ee1b75b6a751d6a009c2"
+          }
+        },
+        {
+          "client_id": "708647142889-19moi2m7h0q7faq8kj2cmnjtr8jl2n36.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn34Xkt8aBVLTVYCAtWj7TsIG09Qm6F20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708647142889-19moi2m7h0q7faq8kj2cmnjtr8jl2n36.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "708647142889-s0keqgurm57cnhttk7dnal73n29gg9of.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.apars.shop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
