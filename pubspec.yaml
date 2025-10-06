@@ -89,6 +89,8 @@ flutter:
     - assets/images/51d0428a2501c73bd5251fb33990fea6411bbdc5.png
     - assets/images/image copy.png
     - assets/images/image.png
+    - assets/images/logowname.png
+    - assets/images/logo2.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -119,15 +121,15 @@ flutter:
 
 flutter_native_splash:
   color: "#578eeb"  # Background color (use your brand color)
-  image: assets/images/applogo.jpg  # Your company logo
+  image: assets/images/apars-logo-big-960-px-light.png  # Your company logo
   android: true
   ios: true
   web: false
   
   # Optional: Add branding mode for Android 12+
   android_12:
-    image: assets/images/applogo.jpg
+    image: assets/images/apars-logo-big-960-px-light.png
     color: "#578eeb"
 
   # Optional: Keep splash screen visible until app is ready
-  fullscreen: true
+  # fullscreen: true

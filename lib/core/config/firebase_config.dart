@@ -16,19 +16,19 @@ class FirebaseConfig {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCn34Xkt8aBVLTVYCAtWj7TsIG09Qm6F20',
-    appId: '1:708647142889:android:8e3622994810a76c54b778',
-    messagingSenderId: '708647142889',
-    projectId: 'aparsclassroom-app',
-    storageBucket: 'aparsclassroom-app.firebasestorage.app',
+    apiKey: 'AIzaSyAbmdI6Vr-cYOuUWXRBLLEVA1AYsOhBrgg',
+    appId: '1:173461823991:android:60e363ce0a7ddad2d4cef2',
+    messagingSenderId: '173461823991',
+    projectId: 'aparsclassroomapp',
+    storageBucket: 'aparsclassroomapp.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDDoNjL2_KFa5reIs1y2rk_nkeV8wCn65o',
-    appId: '1:708647142889:ios:90b56c7f4735f67554b778',
-    messagingSenderId: '708647142889',
-    projectId: 'aparsclassroom-app',
-    storageBucket: 'aparsclassroom-app.firebasestorage.app',
-    iosBundleId: 'com.apars.shop',
+    apiKey: 'AIzaSyAroEI-22ZYVhnHDQMLPHC0fSBba8XqSAY',
+    appId: '1:173461823991:ios:ad90925753abf78fd4cef2',
+    messagingSenderId: '173461823991',
+    projectId: 'aparsclassroomapp',
+    storageBucket: 'aparsclassroomapp.firebasestorage.app',
+    iosBundleId: 'com.example.aparsclassroomApp',
   );
 }

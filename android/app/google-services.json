@@ -1,48 +1,48 @@
 {
   "project_info": {
-    "project_number": "708647142889",
-    "project_id": "aparsclassroom-app",
-    "storage_bucket": "aparsclassroom-app.firebasestorage.app"
+    "project_number": "173461823991",
+    "project_id": "aparsclassroomapp",
+    "storage_bucket": "aparsclassroomapp.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:708647142889:android:8e3622994810a76c54b778",
+        "mobilesdk_app_id": "1:173461823991:android:60e363ce0a7ddad2d4cef2",
         "android_client_info": {
-          "package_name": "com.apars.shop"
+          "package_name": "com.example.aparsclassroom_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "708647142889-homamlriiag3udvrq0tm71jfqn3k3g32.apps.googleusercontent.com",
+          "client_id": "173461823991-nnbq8dofjco2itecv3t7ejjb5nuv59ol.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.apars.shop",
+            "package_name": "com.example.aparsclassroom_app",
             "certificate_hash": "06d2c05747210aea7195ee1b75b6a751d6a009c2"
           }
         },
         {
-          "client_id": "708647142889-19moi2m7h0q7faq8kj2cmnjtr8jl2n36.apps.googleusercontent.com",
+          "client_id": "173461823991-uiqb98mbbt3ptol804alhacmpr2cirhu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCn34Xkt8aBVLTVYCAtWj7TsIG09Qm6F20"
+          "current_key": "AIzaSyAbmdI6Vr-cYOuUWXRBLLEVA1AYsOhBrgg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "708647142889-19moi2m7h0q7faq8kj2cmnjtr8jl2n36.apps.googleusercontent.com",
+              "client_id": "173461823991-uiqb98mbbt3ptol804alhacmpr2cirhu.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "708647142889-s0keqgurm57cnhttk7dnal73n29gg9of.apps.googleusercontent.com",
+              "client_id": "173461823991-kqh51dkrcitt84t74n9gemdr460oje8p.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.apars.shop"
+                "bundle_id": "com.example.aparsclassroomApp"
               }
             }
           ]
