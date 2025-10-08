@@ -7,27 +7,65 @@ class UserModel extends User {
     super.displayName,
     super.photoUrl,
     super.createdAt,
+    super.phone,
+    super.enrolledCourses,
+    super.address,
+    super.fbLink,
+    super.fbName,
+    super.hsc,
+    super.institution,
+    super.parent,
+    super.roll,
+    super.branch,
+    super.offline,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] ?? json; // supports both wrapped and direct data
     return UserModel(
-      uid: json['uid'] as String,
-      email: json['email'] as String,
-      displayName: json['displayName'] as String?,
-      photoUrl: json['photoUrl'] as String?,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
+      uid: data['uid'] ?? '',
+      email: data['Email'] ?? '',
+      displayName: data['Name'],
+      photoUrl: data['photo'],
+      createdAt: data['created_at'] != null
+          ? DateTime.tryParse(data['created_at'])
           : null,
+      phone: data['Phone'],
+      enrolledCourses: data['Courses'] != null
+          ? (data['Courses'] as List)
+              .map((e) => Course.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : null,
+      address: data['Address'],
+      fbLink: data['FbLink'],
+      fbName: data['FbName'],
+      hsc: data['HSC'],
+      institution: data['Institution'],
+      parent: data['Parent'],
+      roll: data['roll'],
+      branch: data['Branch'],
+      offline: data['offline'] as bool?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'email': email,
-      'displayName': displayName,
-      'photoUrl': photoUrl,
-      'createdAt': createdAt?.toIso8601String(),
+      'Email': email,
+      'Name': displayName,
+      'photo': photoUrl,
+      'created_at': createdAt?.toIso8601String(),
+      'Phone': phone,
+      'Courses': enrolledCourses?.map((course) => course.toJson()).toList(),
+      'Address': address,
+      'FbLink': fbLink,
+      'FbName': fbName,
+      'HSC': hsc,
+      'Institution': institution,
+      'Parent': parent,
+      'roll': roll,
+      'Branch': branch,
+      'offline': offline,
     };
   }
 
@@ -38,6 +76,17 @@ class UserModel extends User {
       displayName: user.displayName,
       photoUrl: user.photoUrl,
       createdAt: user.createdAt,
+      phone: user.phone,
+      enrolledCourses: user.enrolledCourses,
+      address: user.address,
+      fbLink: user.fbLink,
+      fbName: user.fbName,
+      hsc: user.hsc,
+      institution: user.institution,
+      parent: user.parent,
+      roll: user.roll,
+      branch: user.branch,
+      offline: user.offline,
     );
   }
 }

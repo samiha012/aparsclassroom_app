@@ -91,6 +91,14 @@ flutter:
     - assets/images/image.png
     - assets/images/logowname.png
     - assets/images/logo2.png
+    - assets/svgs/home.svg
+    - assets/svgs/courses.svg
+    - assets/svgs/profile.svg
+    - assets/svgs/community.svg
+    - assets/svgs/home-active.svg
+    - assets/svgs/courses-active.svg
+    - assets/svgs/profile-active.svg
+    - assets/svgs/community-active.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
