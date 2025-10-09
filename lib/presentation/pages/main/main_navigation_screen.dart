@@ -40,6 +40,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
+      // use extendBody to allow content to go behind the BottomAppBar, value true will make the content go beyond the bar and hinder accessing content, false will keep it above the bar
       extendBody: true,
       bottomNavigationBar: SafeArea(
         top: false,

@@ -18,10 +18,12 @@ class CourseCard extends StatelessWidget {
         );
       },
       child: Container(
+        color: Colors.white,
         width: 200,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         child: Card(
-          elevation: 3,
+          color: Colors.white,
+          //elevation: 3,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

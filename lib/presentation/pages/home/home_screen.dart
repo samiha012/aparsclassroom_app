@@ -32,7 +32,9 @@ class HomeScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             String name = 'User';
@@ -109,7 +111,7 @@ class HomeScreenView extends StatelessWidget {
                 }
               },
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.only(top: 16, bottom: 100),
                 itemCount: state.groupedCourses.length,
                 itemBuilder: (context, index) {
                   final category = state.groupedCourses.keys.elementAt(index);

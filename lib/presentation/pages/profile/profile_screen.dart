@@ -14,14 +14,12 @@ class ProfileScreen extends StatelessWidget {
     final authState = context.read<AuthBloc>().state;
 
     if (authState is! Authenticated) {
-      return const Scaffold(
-        body: Center(child: Text('Please login')),
-      );
+      return const Scaffold(body: Center(child: Text('Please login')));
     }
 
     return BlocProvider(
-      create: (context) => di.sl<ProfileBloc>()
-        ..add(LoadProfileEvent(uid: authState.user.uid)),
+      create: (context) =>
+          di.sl<ProfileBloc>()..add(LoadProfileEvent(uid: authState.user.uid)),
       child: ProfileScreenView(authUid: authState.user.uid),
     );
   }
@@ -37,15 +35,15 @@ class ProfileScreenView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        backgroundColor: Colors.white,
         centerTitle: true,
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Unauthenticated) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              AppRouter.login,
-              (route) => false,
-            );
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil(AppRouter.login, (route) => false);
           }
         },
         child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -59,15 +57,19 @@ class ProfileScreenView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
                     Text(state.message),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
                         context.read<ProfileBloc>().add(
-                              LoadProfileEvent(uid: authUid),
-                            );
+                          LoadProfileEvent(uid: authUid),
+                        );
                       },
                       child: const Text('Retry'),
                     ),
@@ -80,83 +82,125 @@ class ProfileScreenView extends StatelessWidget {
               final user = state.user;
 
               return SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 120),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
-                    // Profile Picture
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: user.photoUrl != null
-                          ? CachedNetworkImageProvider(user.photoUrl!)
-                          : null,
-                      child: user.photoUrl == null
-                          ? const Icon(Icons.person, size: 60)
-                          : null,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Name
-                    Text(
-                      user.displayName ?? 'User',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    // Email
-                    Text(
-                      user.email,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // UID
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 177, 176, 176), // border color
+                          width: 1, // border thickness
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          12,
+                        ),
                       ),
-                      child: Text(
-                        'UID: ${user.uid.substring(0, 8)}...',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[700],
-                          fontFamily: 'monospace',
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Profile Image
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.grey[300],
+                              backgroundImage: user.photoUrl != null
+                                  ? CachedNetworkImageProvider(user.photoUrl!)
+                                  : null,
+                              child: user.photoUrl == null
+                                  ? const Icon(Icons.person, size: 50)
+                                  : null,
+                            ),
+                            const SizedBox(width: 16),
+
+                            // Name + Extra Info
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    user.displayName ?? 'User',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    user.hsc ?? 'No Batch Info',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                  Text(
+                                    user.institution ??
+                                        'Institution Name not updated',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 32),
 
-                    // Stats
+                    // 🔹 Stats Section (2 rows × 3 items)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 1.1,
                         children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              context,
-                              'Enrolled',
-                              '${user.enrolledCourses?.length ?? 0}',
-                              Icons.book_outlined,
-                            ),
+                          _buildGridItem(
+                            context,
+                            icon: Icons.download_outlined,
+                            label: 'Downloads',
+                          ),
+                          _buildGridItem(
+                            context,
+                            icon: Icons.class_outlined,
+                            label: 'Classes',
+                          ),
+                          _buildGridItem(
+                            context,
+                            icon: Icons.quiz_outlined,
+                            label: 'Exams',
+                          ),
+                          _buildGridItem(
+                            context,
+                            icon: Icons.book_outlined,
+                            label: 'Enrolled',
+                            value: '${user.enrolledCourses?.length ?? 0}',
+                          ),
+                          _buildGridItem(
+                            context,
+                            icon: Icons.qr_code_2_outlined,
+                            label: 'Achieve QR',
+                          ),
+                          _buildGridItem(
+                            context,
+                            icon: Icons.receipt_long_outlined,
+                            label: 'Receipt',
                           ),
                         ],
                       ),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    // Account Menu
                     _buildMenuSection(
                       context: context,
                       title: 'Account',
@@ -171,13 +215,14 @@ class ProfileScreenView extends StatelessWidget {
                         _MenuItem(
                           icon: Icons.book_outlined,
                           title: 'My Courses',
-                          subtitle: '${user.enrolledCourses?.length ?? 0} courses',
+                          subtitle:
+                              '${user.enrolledCourses?.length ?? 0} courses',
                           onTap: () {},
                         ),
                       ],
                     ),
 
-                    // Support Menu
+                    // 🔹 Support Section
                     _buildMenuSection(
                       context: context,
                       title: 'Support',
@@ -194,8 +239,6 @@ class ProfileScreenView extends StatelessWidget {
                         ),
                       ],
                     ),
-
-                    // Logout Button
                     Padding(
                       padding: const EdgeInsets.all(24),
                       child: SizedBox(
@@ -227,20 +270,73 @@ class ProfileScreenView extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildStatCard(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 5)],
+        boxShadow: [
+          BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 5),
+        ],
       ),
       child: Column(
         children: [
           Icon(icon, color: Theme.of(context).primaryColor, size: 32),
           const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
           Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    String? value,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Theme.of(context).primaryColor, size: 30),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          ),
+          if (value != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -256,7 +352,13 @@ class ProfileScreenView extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Text(title, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.grey[600], fontWeight: FontWeight.bold)),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: Colors.grey[600],
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -272,11 +374,14 @@ class ProfileScreenView extends StatelessWidget {
                   ListTile(
                     leading: Icon(item.icon, color: Colors.grey[700]),
                     title: Text(item.title),
-                    subtitle: item.subtitle != null ? Text(item.subtitle!) : null,
+                    subtitle: item.subtitle != null
+                        ? Text(item.subtitle!)
+                        : null,
                     trailing: const Icon(Icons.chevron_right),
                     onTap: item.onTap,
                   ),
-                  if (!isLast) const Divider(height: 1, indent: 56, color: Colors.grey),
+                  if (!isLast)
+                    const Divider(height: 1, indent: 56, color: Colors.grey),
                 ],
               );
             }).toList(),
@@ -294,15 +399,23 @@ class ProfileScreenView extends StatelessWidget {
         return AlertDialog(
           title: const Text('Logout'),
           content: const Text('Are you sure you want to logout?'),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           actions: [
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Cancel')),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<AuthBloc>().add(SignOutEvent());
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
               child: const Text('Logout'),
             ),
           ],
@@ -318,5 +431,10 @@ class _MenuItem {
   final String? subtitle;
   final VoidCallback onTap;
 
-  _MenuItem({required this.icon, required this.title, this.subtitle, required this.onTap});
+  _MenuItem({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    required this.onTap,
+  });
 }
