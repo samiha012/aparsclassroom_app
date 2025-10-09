@@ -73,10 +73,8 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    // Remove native splash immediately
     FlutterNativeSplash.remove();
 
-    // Animation controller for text fade-in
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
 

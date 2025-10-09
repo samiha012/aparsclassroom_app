@@ -33,12 +33,32 @@ class HomeScreenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Apars Classroom'),
+        title: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            String name = 'User';
+            if (state is Authenticated) {
+              name = state.user.displayName?.split(' ').first ?? 'User';
+            }
+            return Text(
+              'Hello, $name',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            );
+          },
+        ),
+        centerTitle: false, // This aligns title to the left
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
+            color: Colors.blue[900],
             onPressed: () {
               Navigator.of(context).pushNamed(RouteConstants.search);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            color: Colors.blue[900],
+            onPressed: () {
+              //Navigator.of(context).pushNamed(RouteConstants.notifications);
             },
           ),
         ],
@@ -63,8 +83,8 @@ class HomeScreenView extends StatelessWidget {
                       final authState = context.read<AuthBloc>().state;
                       if (authState is Authenticated) {
                         context.read<CourseBloc>().add(
-                              LoadCoursesEvent(uid: authState.user.uid),
-                            );
+                          LoadCoursesEvent(uid: authState.user.uid),
+                        );
                       }
                     },
                     child: const Text('Retry'),
@@ -76,9 +96,7 @@ class HomeScreenView extends StatelessWidget {
 
           if (state is CourseLoaded) {
             if (state.groupedCourses.isEmpty) {
-              return const Center(
-                child: Text('No courses available'),
-              );
+              return const Center(child: Text('No courses available'));
             }
 
             return RefreshIndicator(
@@ -86,8 +104,8 @@ class HomeScreenView extends StatelessWidget {
                 final authState = context.read<AuthBloc>().state;
                 if (authState is Authenticated) {
                   context.read<CourseBloc>().add(
-                        LoadCoursesEvent(uid: authState.user.uid),
-                      );
+                    LoadCoursesEvent(uid: authState.user.uid),
+                  );
                 }
               },
               child: ListView.builder(
@@ -97,10 +115,7 @@ class HomeScreenView extends StatelessWidget {
                   final category = state.groupedCourses.keys.elementAt(index);
                   final courses = state.groupedCourses[category]!;
 
-                  return CategorySection(
-                    category: category,
-                    courses: courses,
-                  );
+                  return CategorySection(category: category, courses: courses);
                 },
               ),
             );
@@ -132,9 +147,9 @@ class CategorySection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             category,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(

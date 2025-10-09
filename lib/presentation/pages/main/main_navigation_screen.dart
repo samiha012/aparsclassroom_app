@@ -53,7 +53,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               child: SizedBox(
                 height: 40,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(_labels.length, (index) {
                     final isActive = _currentIndex == index;
                     return GestureDetector(
@@ -65,12 +65,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ), // reduce padding
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: isActive ? Colors.white : Colors.transparent,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         child: Row(
                           children: [
@@ -78,8 +78,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                               isActive
                                   ? _activeIconPaths[index]
                                   : _iconPaths[index],
-                              height: 20,
-                              width: 20,
+                              height: 25,
+                              width: 25,
                               colorFilter: ColorFilter.mode(
                                 isActive ? Colors.blue[900]! : Colors.white,
                                 BlendMode.srcIn,
@@ -95,7 +95,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                                       ? Colors.blue[900]
                                       : Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18, // smaller font
+                                  fontSize: 16, // smaller font
                                 ),
                               ),
                             ],

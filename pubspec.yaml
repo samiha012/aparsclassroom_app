@@ -128,7 +128,7 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
 flutter_native_splash:
-  color: "#578eeb"  # Background color (use your brand color)
+  color: "#578eeb" 
   image: assets/images/apars-logo-big-960-px-light.png  # Your company logo
   android: true
   ios: true
