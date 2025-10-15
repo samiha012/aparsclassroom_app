@@ -49,7 +49,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(50),
             child: BottomAppBar(
-              color: Colors.blue[900],
+              color: Colors.blue[800],
               elevation: 8,
               child: SizedBox(
                 height: 40,
@@ -81,10 +81,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                                   : _iconPaths[index],
                               height: 25,
                               width: 25,
-                              colorFilter: ColorFilter.mode(
-                                isActive ? Colors.blue[900]! : Colors.white,
-                                BlendMode.srcIn,
-                              ),
+                              // colorFilter: ColorFilter.mode(
+                              //   isActive ? Colors.blue[900]! : Colors.white,
+                              //   BlendMode.srcIn,
+                              // ),
                             ),
 
                             if (isActive) ...[

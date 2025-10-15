@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:aparsclassroom_app/core/constants/route_constants.dart';
 import '../../../domain/entities/course.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;
@@ -11,11 +12,15 @@ class CourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          RouteConstants.courseDetails,
-          arguments: {'courseId': course.id},
-        );
+      // onTap: () {
+      //   Navigator.of(context).pushNamed(
+      //     RouteConstants.courseDetails,
+      //     arguments: {'courseId': course.id},
+      //   );
+      // },
+      onTap: () async {
+        final url = Uri.parse(course.permalink);
+        await launchUrl(url, mode: LaunchMode.externalApplication);
       },
       child: Container(
         color: Colors.white,
@@ -41,9 +46,7 @@ class CourseCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: Colors.grey[300],

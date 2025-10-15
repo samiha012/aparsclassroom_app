@@ -1,6 +1,6 @@
 # aparsclassroom_app
 
-A new Flutter project.
+An app for aparsclassroom ecosystem
 
 ## Getting Started
 

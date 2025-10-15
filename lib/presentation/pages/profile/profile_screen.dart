@@ -93,12 +93,15 @@ class ProfileScreenView extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: const Color.fromARGB(255, 177, 176, 176), // border color
+                          color: const Color.fromARGB(
+                            255,
+                            177,
+                            176,
+                            176,
+                          ), // border color
                           width: 1, // border thickness
                         ),
-                        borderRadius: BorderRadius.circular(
-                          12,
-                        ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -154,53 +157,63 @@ class ProfileScreenView extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 20),
 
-                    // 🔹 Stats Section (2 rows × 3 items)
+                    //menu items section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 1.1,
-                        children: [
-                          _buildGridItem(
-                            context,
-                            icon: Icons.download_outlined,
-                            label: 'Downloads',
-                          ),
-                          _buildGridItem(
-                            context,
-                            icon: Icons.class_outlined,
-                            label: 'Classes',
-                          ),
-                          _buildGridItem(
-                            context,
-                            icon: Icons.quiz_outlined,
-                            label: 'Exams',
-                          ),
-                          _buildGridItem(
-                            context,
-                            icon: Icons.book_outlined,
-                            label: 'Enrolled',
-                            value: '${user.enrolledCourses?.length ?? 0}',
-                          ),
-                          _buildGridItem(
-                            context,
-                            icon: Icons.qr_code_2_outlined,
-                            label: 'Achieve QR',
-                          ),
-                          _buildGridItem(
-                            context,
-                            icon: Icons.receipt_long_outlined,
-                            label: 'Receipt',
-                          ),
-                        ],
+                      child: Wrap(
+                        spacing: 12, // horizontal space between items
+                        runSpacing: 20, // vertical space between rows
+                        children:
+                            [
+                                  _buildGridItem(
+                                    context,
+                                    icon: Icons.download_outlined,
+                                    label: 'Downloads',
+                                  ),
+                                  _buildGridItem(
+                                    context,
+                                    icon: Icons.class_outlined,
+                                    label: 'Classes',
+                                  ),
+                                  _buildGridItem(
+                                    context,
+                                    icon: Icons.quiz_outlined,
+                                    label: 'Exams',
+                                  ),
+                                  _buildGridItem(
+                                    context,
+                                    icon: Icons.book_outlined,
+                                    label: 'Enrolled Courses',
+                                    value:
+                                        '${user.enrolledCourses?.length ?? 0}',
+                                  ),
+                                  _buildGridItem(
+                                    context,
+                                    icon: Icons.qr_code_2_outlined,
+                                    label: 'Achieve QR',
+                                  ),
+                                  _buildGridItem(
+                                    context,
+                                    icon: Icons.receipt_long_outlined,
+                                    label: 'Invoices',
+                                  ),
+                                ]
+                                .map(
+                                  (child) => SizedBox(
+                                    width:
+                                        (MediaQuery.of(context).size.width -
+                                            16 * 2 -
+                                            12 * 2) /
+                                        3,
+                                    child: child,
+                                  ),
+                                )
+                                .toList(),
                       ),
                     ),
+                    const SizedBox(height: 30),
                     _buildMenuSection(
                       context: context,
                       title: 'Account',
@@ -230,6 +243,16 @@ class ProfileScreenView extends StatelessWidget {
                         _MenuItem(
                           icon: Icons.help_outline,
                           title: 'Help & Support',
+                          onTap: () {},
+                        ),
+                        _MenuItem(
+                          icon: Icons.privacy_tip_outlined,
+                          title: 'Privacy Policy',
+                          onTap: () {},
+                        ),
+                        _MenuItem(
+                          icon: Icons.article,
+                          title: 'Terms and conditions',
                           onTap: () {},
                         ),
                         _MenuItem(
@@ -306,17 +329,17 @@ class ProfileScreenView extends StatelessWidget {
     String? value,
   }) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(12),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.grey.withOpacity(0.1),
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 2),
+      //     ),
+      //   ],
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
