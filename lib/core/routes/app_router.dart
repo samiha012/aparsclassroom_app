@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../presentation/pages/splash/splash_screen.dart';
 import '../../presentation/pages/auth/login_screen.dart';
-import '../../presentation/pages/auth/email_login_screen.dart';
+import '../../presentation/pages/auth/check_user_screen.dart';
+import '../../presentation/pages/auth/password_login_screen.dart';
+import '../../presentation/pages/auth/signup_screen.dart';
 import '../../presentation/pages/main/main_navigation_screen.dart';
 import '../../presentation/pages/course/course_details_screen.dart';
 import '../../presentation/pages/course/subject_list_screen.dart';
@@ -32,14 +34,30 @@ class AppRouter {
           builder: (_) => const LoginScreen(),
         );
 
-      case RouteConstants.emailLogin:
+      case RouteConstants.checkUser:
         return MaterialPageRoute(
-          builder: (_) => const EmailLoginScreen(),
+          builder: (_) => const CheckUserScreen(),
+        );
+
+      case RouteConstants.passwordLogin:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => PasswordLoginScreen(
+            identifier: args['identifier'] as String,
+          ),
         );
 
       case RouteConstants.main:
         return MaterialPageRoute(
           builder: (_) => const MainNavigationScreen(),
+        );
+
+      case RouteConstants.signup:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder: (_) => SignupScreen(
+            identifier: args?['identifier'] as String?,
+          ),
         );
 
       case RouteConstants.courseDetails:

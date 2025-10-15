@@ -22,6 +22,31 @@ class Authenticated extends AuthState {
 
 class Unauthenticated extends AuthState {}
 
+class UserExistsCheck extends AuthState {
+  final bool exists;
+  final String identifier;
+
+  const UserExistsCheck({
+    required this.exists,
+    required this.identifier,
+  });
+
+  @override
+  List<Object?> get props => [exists, identifier];
+}
+
+class PasswordVerificationRequired extends AuthState {
+  final String identifier;
+
+  PasswordVerificationRequired({required this.identifier});
+
+  @override
+  List<Object?> get props => [identifier];
+}
+
+
+class PasswordResetSent extends AuthState {}
+
 class AuthError extends AuthState {
   final String message;
 

@@ -6,6 +6,11 @@ class RouteConstants {
   static const String splash = '/';
   static const String login = '/login';
   static const String emailLogin = '/email-login';
+  static const String checkUser = '/check-user';
+  static const String passwordLogin = '/password-login';
+  static const String signup = '/signup';
+  static const String forgotPassword = '/forgot-password';
+  static const String resetPassword = '/reset-password';
 
   // Main Routes
   static const String main = '/main';

@@ -4,15 +4,15 @@ import '../../core/network/network_info.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/local/auth_local_datasource.dart';
-import '../datasources/remote/auth_remote_datasource.dart';
+import '../datasources/remote/custom_auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
+  final CustomAuthRemoteDataSource customAuthDataSource;
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   AuthRepositoryImpl({
-    required this.remoteDataSource,
+    required this.customAuthDataSource,
     required this.localDataSource,
     required this.networkInfo,
   });
@@ -20,29 +20,30 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, User?>> checkAuthStatus() async {
     try {
-      if (await networkInfo.isConnected) {
-        final user = await remoteDataSource.getCurrentUser();
-        if (user != null) {
-          await localDataSource.cacheUser(user);
-        }
-        return Right(user);
-      } else {
-        final cachedUser = await localDataSource.getCachedUser();
-        return Right(cachedUser);
-      }
+      final cachedUser = await localDataSource.getCachedUser();
+      if (cachedUser != null) return Right(cachedUser);
+      return const Right(null);
     } catch (e) {
       return Left(AuthFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, User>> signInWithGoogle() async {
+  Future<Either<Failure, bool>> checkUserExists(String emailOrPhone) async {
     try {
-      if (!await networkInfo.isConnected) {
-        return const Left(NetworkFailure('No internet connection'));
-      }
+      if (!await networkInfo.isConnected) return const Left(NetworkFailure('No internet'));
+      final exists = await customAuthDataSource.checkUserExists(emailOrPhone);
+      return Right(exists);
+    } catch (e) {
+      return Left(AuthFailure(e.toString()));
+    }
+  }
 
-      final user = await remoteDataSource.signInWithGoogle();
+  @override
+  Future<Either<Failure, User>> verifyLogin(String password) async {
+    try {
+      if (!await networkInfo.isConnected) return const Left(NetworkFailure('No internet'));
+      final user = await customAuthDataSource.verifyLogin(password);
       await localDataSource.cacheUser(user);
       return Right(user);
     } catch (e) {
@@ -51,18 +52,44 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signInWithEmail(
-    String email,
-    String password,
-  ) async {
+  Future<Either<Failure, User>> signup({
+    required String name,
+    required String email,
+    required String phone,
+    required String password,
+  }) async {
     try {
-      if (!await networkInfo.isConnected) {
-        return const Left(NetworkFailure('No internet connection'));
-      }
-
-      final user = await remoteDataSource.signInWithEmail(email, password);
+      if (!await networkInfo.isConnected) return const Left(NetworkFailure('No internet'));
+      final user = await customAuthDataSource.signup(
+        name: name,
+        email: email,
+        phone: phone,
+        password: password,
+      );
       await localDataSource.cacheUser(user);
       return Right(user);
+    } catch (e) {
+      return Left(AuthFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> forgotPassword(String emailOrPhone) async {
+    try {
+      if (!await networkInfo.isConnected) return const Left(NetworkFailure('No internet'));
+      await customAuthDataSource.forgotPassword(emailOrPhone);
+      return const Right(null);
+    } catch (e) {
+      return Left(AuthFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword(String token, String newPassword) async {
+    try {
+      if (!await networkInfo.isConnected) return const Left(NetworkFailure('No internet'));
+      await customAuthDataSource.resetPassword(token, newPassword);
+      return const Right(null);
     } catch (e) {
       return Left(AuthFailure(e.toString()));
     }
@@ -71,8 +98,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
-      await remoteDataSource.signOut();
-      await localDataSource.clearCache();
+      await Future.wait([
+        customAuthDataSource.logout(),
+        localDataSource.clearCache(),
+      ]);
       return const Right(null);
     } catch (e) {
       return Left(AuthFailure(e.toString()));

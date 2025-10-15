@@ -133,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                             : () {
                                 // Navigate to email login
                                 Navigator.of(context).pushNamed(
-                                  '/email-login',
+                                  '/check-user',
                                 );
                               },
                         child: const Text('Sign in'),
