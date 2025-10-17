@@ -2,49 +2,70 @@ import 'package:equatable/equatable.dart';
 
 class Course extends Equatable {
   final String id;
+  final String courseId;
   final String productId;
   final String productName;
   final String productFullName;
-  final String productImage;
+  final String? productImage;
   final String category;
   final String subCategory;
-  final String platform;
   final double currencyAmount;
-  final String permalink;
-  final String? fbLink;
-  final String? webapp;
-  final String status;
+  final String? permalink;
+  final String? facebookGroup;
+  final String? parent;
+  final int platinum;
+  final bool markAsArchieve;
+  final String? archieveCourseId;
+  final String? superAdminId;
+  final bool cycleAvailable;
+  final DateTime? createdAt;
+  final int studentCount;
+  final bool isEnrolled;
 
   const Course({
     required this.id,
+    required this.courseId,
     required this.productId,
     required this.productName,
     required this.productFullName,
-    required this.productImage,
+    this.productImage,
     required this.category,
     required this.subCategory,
-    required this.platform,
     required this.currencyAmount,
-    required this.permalink,
-    this.fbLink,
-    this.webapp,
-    required this.status,
+    this.permalink,
+    this.facebookGroup,
+    this.parent,
+    required this.platinum,
+    required this.markAsArchieve,
+    this.archieveCourseId,
+    this.superAdminId,
+    required this.cycleAvailable,
+    this.createdAt,
+    required this.studentCount,
+    required this.isEnrolled,
   });
 
   @override
   List<Object?> get props => [
         id,
+        courseId,
         productId,
         productName,
         productFullName,
         productImage,
         category,
         subCategory,
-        platform,
         currencyAmount,
         permalink,
-        fbLink,
-        webapp,
-        status,
+        facebookGroup,
+        parent,
+        platinum,
+        markAsArchieve,
+        archieveCourseId,
+        superAdminId,
+        cycleAvailable,
+        createdAt,
+        studentCount,
+        isEnrolled,
       ];
 }

@@ -1,43 +1,50 @@
 import 'package:dio/dio.dart';
+import '../../../core/constants/api_constants.dart';
 import '../../models/course_model.dart';
 
 abstract class CourseRemoteDataSource {
   Future<List<CourseModel>> getAllCourses(String uid);
+  Future<CourseModel> getCourseDetails(String courseId);
 }
 
 class CourseRemoteDataSourceImpl implements CourseRemoteDataSource {
   final Dio dio;
-  static const String baseUrl = 'https://crm.apars.shop';
 
   CourseRemoteDataSourceImpl({required this.dio});
 
   @override
   Future<List<CourseModel>> getAllCourses(String uid) async {
     try {
-      //  uncomment this for production
-      // final response = await dio.get('$baseUrl/product/all?uid=$uid');
-      final response = await dio.get(
-        '$baseUrl/product/all?uid=GbpNqKDUQqU5ZHo3qyEs2EvbtL32',
-      );
+      final response = await dio.get('${ApiConstants.baseUrl}/course?limit=100');
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-
-        if (data is! Map || !data.containsKey('products')) {
-          throw Exception('Invalid response format: missing "products" key');
-        }
-
-        final List<dynamic> courseList = data['products'] as List<dynamic>;
-
-        return courseList
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        final data = response.data['data'];
+        final List<dynamic> courses = data['data'] as List;
+        
+        return courses
             .map((json) => CourseModel.fromJson(json as Map<String, dynamic>))
-             .where((course) => course.status.toLowerCase() != 'disable')
             .toList();
       } else {
         throw Exception('Failed to load courses');
       }
     } catch (e) {
       throw Exception('Error fetching courses: $e');
+    }
+  }
+
+  @override
+  Future<CourseModel> getCourseDetails(String courseId) async {
+    try {
+      final response = await dio.get('${ApiConstants.authBaseUrl}/product/$courseId');
+
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        final data = response.data['data'];
+        return CourseModel.fromJson(data as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to load course details');
+      }
+    } catch (e) {
+      throw Exception('Error fetching course details: $e');
     }
   }
 }

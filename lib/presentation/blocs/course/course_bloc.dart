@@ -24,19 +24,29 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
     result.fold(
       (failure) => emit(CourseError(message: failure.message)),
       (courses) {
+        // Filter out archived courses
+        final activeCourses = courses
+            .where((course) => !course.markAsArchieve)
+            .toList();
+
         // Group courses by category
         final Map<String, List<Course>> groupedCourses = {};
-        for (var course in courses) {
-          if (course.status == 'Active') {
-            if (!groupedCourses.containsKey(course.category)) {
-              groupedCourses[course.category] = [];
-            }
-            groupedCourses[course.category]!.add(course);
+        for (var course in activeCourses) {
+          if (!groupedCourses.containsKey(course.category)) {
+            groupedCourses[course.category] = [];
           }
+          groupedCourses[course.category]!.add(course);
         }
+
+        // Separate enrolled courses
+        final enrolledCourses = activeCourses
+            .where((course) => course.isEnrolled)
+            .toList();
+
         emit(CourseLoaded(
-          courses: courses,
+          courses: activeCourses,
           groupedCourses: groupedCourses,
+          enrolledCourses: enrolledCourses,
         ));
       },
     );

@@ -4,7 +4,8 @@ class ApiConstants {
   // Base URLs
   static const String authBaseUrl = 'http://10.0.2.2:3001/api/v1';
   static const String profileBaseUrl = 'https://profile.aparsclassroom.com';
-  static const String courseBaseUrl = 'http://10.0.2.2:3001/api/v1';
+  static const String courseBaseUrl = 'http://10.0.2.2:3001/api/v1/';
+  static const String baseUrl = 'http://10.0.2.2:3001/api/v1/';
 
   // Auth Endpoints
   static const String checkUser = '/login'; // POST: email or phone
@@ -17,7 +18,4 @@ class ApiConstants {
   // Profile Endpoints
   static const String userProfile = '/profile/info'; // GET: ?uid=xxx
   static const String updateProfile = '/profile/update'; // POST
-
-  // Course Endpoints
-  static const String allCourses = '/product/all'; // GET: ?uid=xxx
 }

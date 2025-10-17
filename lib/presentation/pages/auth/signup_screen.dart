@@ -81,8 +81,12 @@ class _SignupScreenState extends State<SignupScreen> {
     if (value == null || value.isEmpty) {
       return 'Please enter a password';
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+    if (value.length < 8 ) {
+      return 'Password must be at least 8 characters with at least one number';
+    }
+    final numberRegex = RegExp(r'\d');
+    if (!numberRegex.hasMatch(value)) {
+      return 'Password must contain at least one number';
     }
     return null;
   }
@@ -147,10 +151,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     const SizedBox(height: 20),
 
                     // Icon
-                    const Icon(
-                      Icons.person_add_outlined,
-                      size: 80,
-                      color: Colors.blueAccent,
+                    const Text(
+                      'কোর্স কিনে থাকলে ইনভয়েসের ইমেইল ব্যবহার করুন। এটি লগইন, কোর্স অ্যাক্সেস এবং পাসওয়ার্ড পরিবর্তনের জন্য গুরুত্বপূর্ণ, তাই ইমেইল মনে রাখা জরুরি।',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14),
+                    ),
+
+                    const Text(
+                      '* ইমেইল এবং পাসওয়ার্ড মনে রাখুন বা লিখে রাখুন।',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: Colors.red),
                     ),
 
                     const SizedBox(height: 30),

@@ -80,7 +80,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await verifyLogin(
       password: event.password,
-    ); // ensure this calls /verify-login
+    ); 
     result.fold(
       (failure) => emit(AuthError(message: failure.message)),
       (user) => emit(Authenticated(user: user)),

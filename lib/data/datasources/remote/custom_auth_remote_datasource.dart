@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import '../../models/user_model.dart';
 import '../../../core/constants/api_constants.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class CustomAuthRemoteDataSource {
   Future<bool> checkUserExists(String emailOrPhone); 
@@ -20,13 +19,12 @@ abstract class CustomAuthRemoteDataSource {
 
 class CustomAuthRemoteDataSourceImpl implements CustomAuthRemoteDataSource {
   final Dio dio;
-  final CookieJar cookieJar = CookieJar();
+  final storage = const FlutterSecureStorage();
 
-  CustomAuthRemoteDataSourceImpl({required this.dio}) {
-    dio.interceptors.add(CookieManager(cookieJar));
-  }
+  CustomAuthRemoteDataSourceImpl({
+    required this.dio,
+  });
 
-  /// Step 1: Check if user exists
   @override
   Future<bool> checkUserExists(String emailOrPhone) async {
     try {
@@ -36,19 +34,17 @@ class CustomAuthRemoteDataSourceImpl implements CustomAuthRemoteDataSource {
       );
 
       if (response.statusCode == 200 && response.data['success'] == true) {
-        return true; // User exists, cookie automatically set
+        return true;
       } else if (response.data['success'] == false) {
-        return false; // User not found
+        return false;
       } else {
         throw Exception('Unexpected response from server');
       }
     } catch (e) {
-      print('Error checking user: $e');
       throw Exception('Error checking user: $e');
     }
   }
 
-  /// Step 2: Verify login with password
   @override
   Future<UserModel> verifyLogin(String password) async {
     try {
@@ -61,8 +57,8 @@ class CustomAuthRemoteDataSourceImpl implements CustomAuthRemoteDataSource {
         final data = response.data['data'] as Map<String, dynamic>;
         final token = data['authToken'] as String;
 
-        // Store token for future API calls
-        dio.options.headers['Authorization'] = 'Bearer $token';
+        await storage.write(key: 'x-access-token', value: token);
+        dio.options.headers['x-access-token'] = token;
         return UserModel.fromJson(data);
       } else {
         final message = response.data['message'] ?? 'Invalid password';
@@ -95,7 +91,7 @@ class CustomAuthRemoteDataSourceImpl implements CustomAuthRemoteDataSource {
         final data = response.data['data'] as Map<String, dynamic>;
         final token = data['authToken'] as String;
 
-        dio.options.headers['Authorization'] = 'Bearer $token';
+        await storage.write(key: 'x-access-token', value: token);
         return UserModel.fromJson(data);
       } else {
         throw Exception('Signup failed: ${response.data['message']}');
@@ -141,8 +137,7 @@ class CustomAuthRemoteDataSourceImpl implements CustomAuthRemoteDataSource {
   Future<void> logout() async {
     try {
       await dio.post('${ApiConstants.authBaseUrl}${ApiConstants.logout}');
-      dio.options.headers.remove('Authorization');
-      cookieJar.deleteAll();
+      dio.options.headers.remove('x-access-token');
     } catch (e) {
       throw Exception('Logout error: $e');
     }

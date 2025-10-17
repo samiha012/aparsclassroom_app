@@ -1,8 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:path_provider/path_provider.dart';
 
-// BLoCs
+// blocs
 import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/course/course_bloc.dart';
 import 'presentation/blocs/profile/profile_bloc.dart';
@@ -94,10 +97,7 @@ Future<void> init() async {
 
   // Repository
   sl.registerLazySingleton<CourseRepository>(
-    () => CourseRepositoryImpl(
-      remoteDataSource: sl(),
-      networkInfo: sl(),
-    ),
+    () => CourseRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Data source
@@ -115,10 +115,7 @@ Future<void> init() async {
 
   // Repository
   sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(
-      remoteDataSource: sl(),
-      networkInfo: sl(),
-    ),
+    () => UserRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
   // Data source
@@ -126,11 +123,41 @@ Future<void> init() async {
     () => UserRemoteDataSourceImpl(dio: sl()),
   );
 
+  // Configure Dio with Cookie Manager
+  sl.registerLazySingletonAsync<Dio>(() async {
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
+
+    // Setup cookie manager to persist cookies
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final cookiePath = '${appDocDir.path}/.cookies/';
+    final cookieJar = PersistCookieJar(storage: FileStorage(cookiePath));
+
+    dio.interceptors.add(CookieManager(cookieJar));
+
+    // Add logging interceptor for debugging (remove in production)
+    dio.interceptors.add(
+      LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+        logPrint: (log) => print(log),
+      ),
+    );
+
+    return dio;
+  });
+
   //! ---------------- CORE + EXTERNAL ----------------
 
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
-  sl.registerLazySingleton(() => Dio());
 
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
+
+  await sl.isReady<Dio>();
 }

@@ -14,14 +14,16 @@ class CourseLoading extends CourseState {}
 class CourseLoaded extends CourseState {
   final List<Course> courses;
   final Map<String, List<Course>> groupedCourses;
+  final List<Course> enrolledCourses;
 
   const CourseLoaded({
     required this.courses,
     required this.groupedCourses,
+    required this.enrolledCourses,
   });
 
   @override
-  List<Object?> get props => [courses, groupedCourses];
+  List<Object?> get props => [courses, groupedCourses, enrolledCourses];
 }
 
 class CourseError extends CourseState {
