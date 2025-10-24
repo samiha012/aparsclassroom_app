@@ -2,14 +2,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/course.dart';
 import '../../../domain/usecases/course/get_all_courses.dart';
+import '../../../domain/usecases/course/get_enrolled_courses.dart';
 
 part 'course_event.dart';
 part 'course_state.dart';
 
 class CourseBloc extends Bloc<CourseEvent, CourseState> {
   final GetAllCourses getAllCourses;
+  final GetEnrolledCourses getEnrolledCourses;
 
-  CourseBloc({required this.getAllCourses}) : super(CourseInitial()) {
+  CourseBloc({required this.getAllCourses, required this.getEnrolledCourses})
+    : super(CourseInitial()) {
     on<LoadCoursesEvent>(_onLoadCourses);
   }
 
@@ -21,34 +24,35 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
 
     final result = await getAllCourses(event.uid);
 
-    result.fold(
-      (failure) => emit(CourseError(message: failure.message)),
-      (courses) {
-        // Filter out archived courses
-        final activeCourses = courses
-            .where((course) => !course.markAsArchieve)
-            .toList();
+    result.fold((failure) => emit(CourseError(message: failure.message)), (
+      courses,
+    ) {
+      // Filter out archived courses
+      final activeCourses = courses
+          .where((course) => !course.markAsArchieve)
+          .toList();
 
-        // Group courses by category
-        final Map<String, List<Course>> groupedCourses = {};
-        for (var course in activeCourses) {
-          if (!groupedCourses.containsKey(course.category)) {
-            groupedCourses[course.category] = [];
-          }
-          groupedCourses[course.category]!.add(course);
+      // Group courses by category
+      final Map<String, List<Course>> groupedCourses = {};
+      for (var course in activeCourses) {
+        if (!groupedCourses.containsKey(course.category)) {
+          groupedCourses[course.category] = [];
         }
+        groupedCourses[course.category]!.add(course);
+      }
 
-        // Separate enrolled courses
-        final enrolledCourses = activeCourses
-            .where((course) => course.isEnrolled)
-            .toList();
+      // Separate enrolled courses
+      final enrolledCourses = activeCourses
+          .where((course) => course.isEnrolled)
+          .toList();
 
-        emit(CourseLoaded(
+      emit(
+        CourseLoaded(
           courses: activeCourses,
           groupedCourses: groupedCourses,
           enrolledCourses: enrolledCourses,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 }

@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/course/course_bloc.dart';
 import 'presentation/blocs/profile/profile_bloc.dart';
+import 'presentation/blocs/enrollment/enrollment_bloc.dart';
 
 // UseCases - Auth
 import 'domain/usecases/auth/check_auth_status.dart';
@@ -21,6 +22,8 @@ import 'domain/usecases/auth/sign_out.dart';
 
 // UseCases - Course
 import 'domain/usecases/course/get_all_courses.dart';
+import 'domain/usecases/course/get_enrolled_courses.dart';
+import 'domain/usecases/course/redeem_course.dart';
 
 // UseCases - User
 import 'domain/usecases/user/get_user_profile.dart';
@@ -45,7 +48,6 @@ import 'core/network/network_info.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  //! ---------------- AUTH FEATURE ----------------
 
   // Bloc
   sl.registerFactory(
@@ -59,6 +61,13 @@ Future<void> init() async {
       signOut: sl(),
     ),
   );
+
+  sl.registerFactory(
+  () => EnrollmentBloc(
+    getEnrolledCourses: sl(),
+    redeemCourse: sl(),
+  ),
+);
 
   // Use cases
   sl.registerLazySingleton(() => CheckAuthStatus(sl()));
@@ -90,10 +99,12 @@ Future<void> init() async {
   //! ---------------- COURSE FEATURE ----------------
 
   // Bloc
-  sl.registerFactory(() => CourseBloc(getAllCourses: sl()));
+  sl.registerFactory(() => CourseBloc(getAllCourses: sl(), getEnrolledCourses: sl()));
 
   // Use case
   sl.registerLazySingleton(() => GetAllCourses(sl()));
+  sl.registerLazySingleton(() => GetEnrolledCourses(sl()));
+  sl.registerLazySingleton(() => RedeemCourse(sl()));
 
   // Repository
   sl.registerLazySingleton<CourseRepository>(

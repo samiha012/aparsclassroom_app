@@ -4,7 +4,7 @@ import '../../core/network/network_info.dart';
 import '../../domain/entities/course.dart';
 import '../../domain/repositories/course_repository.dart';
 import '../datasources/remote/course_remote_datasource.dart';
-import '../models/course_model.dart';
+import '../../domain/entities/enrolled_course.dart';
 
 class CourseRepositoryImpl implements CourseRepository {
   final CourseRemoteDataSource remoteDataSource;
@@ -24,6 +24,34 @@ class CourseRepositoryImpl implements CourseRepository {
 
       final courses = await remoteDataSource.getAllCourses(uid);
       return Right(courses);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<EnrolledCourse>>> getEnrolledCourses() async {
+    try {
+      if (!await networkInfo.isConnected) {
+        return const Left(NetworkFailure('No internet connection'));
+      }
+
+      final courses = await remoteDataSource.getEnrolledCourses();
+      return Right(courses);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> redeemCourse(String accessCode) async {
+    try {
+      if (!await networkInfo.isConnected) {
+        return const Left(NetworkFailure('No internet connection'));
+      }
+
+      final result = await remoteDataSource.redeemCourse(accessCode);
+      return Right(result);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
