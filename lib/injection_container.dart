@@ -20,6 +20,14 @@ import 'domain/usecases/auth/forgot_password.dart';
 import 'domain/usecases/auth/reset_password.dart';
 import 'domain/usecases/auth/sign_out.dart';
 
+// UseCases - Subject
+import 'domain/repositories/subject_repository.dart';
+import 'data/repositories/subject_repository_impl.dart';
+import 'data/datasources/remote/subject_remote_datasource.dart';
+import 'domain/usecases/subject/get_course_subjects.dart';
+import 'domain/usecases/subject/get_archieved_courses.dart';
+import 'presentation/blocs/subject/subject_bloc.dart';
+
 // UseCases - Course
 import 'domain/usecases/course/get_all_courses.dart';
 import 'domain/usecases/course/get_enrolled_courses.dart';
@@ -48,7 +56,6 @@ import 'core/network/network_info.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-
   // Bloc
   sl.registerFactory(
     () => AuthBloc(
@@ -63,11 +70,8 @@ Future<void> init() async {
   );
 
   sl.registerFactory(
-  () => EnrollmentBloc(
-    getEnrolledCourses: sl(),
-    redeemCourse: sl(),
-  ),
-);
+    () => EnrollmentBloc(getEnrolledCourses: sl(), redeemCourse: sl()),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => CheckAuthStatus(sl()));
@@ -99,7 +103,9 @@ Future<void> init() async {
   //! ---------------- COURSE FEATURE ----------------
 
   // Bloc
-  sl.registerFactory(() => CourseBloc(getAllCourses: sl(), getEnrolledCourses: sl()));
+  sl.registerFactory(
+    () => CourseBloc(getAllCourses: sl(), getEnrolledCourses: sl()),
+  );
 
   // Use case
   sl.registerLazySingleton(() => GetAllCourses(sl()));
@@ -132,6 +138,26 @@ Future<void> init() async {
   // Data source
   sl.registerLazySingleton<UserRemoteDataSource>(
     () => UserRemoteDataSourceImpl(dio: sl()),
+  );
+
+  //! Features - Subject
+  // BLoC
+  sl.registerFactory(
+    () => SubjectBloc(getCourseSubjects: sl(), getArchievedCourses: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetCourseSubjects(sl()));
+  sl.registerLazySingleton(() => GetArchievedCourses(sl()));
+
+  // Repository
+  sl.registerLazySingleton<SubjectRepository>(
+    () => SubjectRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<SubjectRemoteDataSource>(
+    () => SubjectRemoteDataSourceImpl(dio: sl()),
   );
 
   // Configure Dio with Cookie Manager

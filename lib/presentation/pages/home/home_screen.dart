@@ -171,7 +171,7 @@ class CourseCard extends StatelessWidget {
         '/subject-list',
         arguments: {
           'courseId': course.id,
-          'courseName': course.productName,
+          'courseName': course.productFullName,
         },
       );
     } else {

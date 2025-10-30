@@ -9,7 +9,7 @@ class ApiConstants {
 
   // Auth Endpoints
   static const String checkUser = '/login'; // POST: email or phone
-  static const String login = '/verify-login'; // POST: email/phone, password
+  static const String login = '/verify-login'; // POST: password
   static const String signup = '/signup'; // POST: name, email, phone, password
   static const String forgotPassword = '/forget-password'; // POST: only email
   static const String resetPassword = '/reset-password'; // POST: email, new password
